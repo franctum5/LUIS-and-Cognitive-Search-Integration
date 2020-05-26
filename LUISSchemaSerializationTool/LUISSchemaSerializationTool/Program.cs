@@ -87,19 +87,7 @@ namespace TestLUISDeserialization
                         type = model.children == null || model.children.Length == 0 ? "Collection(Edm.String)" : "Collection(Edm.ComplexType)"
                     };
 
-                    foreach (Child child in model.children)
-                    {
-                        Field field = new Field()
-                        {
-                            name = child.name,
-                            type = "Collection(Edm.String)",
-                            facetable = true,
-                            filterable = true,
-                            retrievable = true
-                        };
-
-                        indexField.fields.Add(field);
-                    }
+                    ExploreChildren(model.children, indexField.fields);
 
                     indexFields.Add(indexField);
 
@@ -155,6 +143,25 @@ namespace TestLUISDeserialization
             //    if(entity.Key != "$instance")
             //        output.Add(entity.Key, entity.Value);
             //}
+        }
+
+        private static void ExploreChildren(Child[] children, List<Field> fields)
+        {
+            foreach (Child child in children)
+            {
+                Field field = new Field()
+                {
+                    name = child.name,
+                    type = child.children == null || child.children.Length == 0 ? "Collection(Edm.String)" : "Collection(Edm.ComplexType)",
+                    facetable = true,
+                    filterable = true,
+                    retrievable = true
+                };
+
+                ExploreChildren(child.children, field.fields);
+
+                fields.Add(field);
+            }
         }
     }
 }

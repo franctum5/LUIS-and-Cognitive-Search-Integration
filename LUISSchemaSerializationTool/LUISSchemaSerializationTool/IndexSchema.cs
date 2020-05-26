@@ -24,6 +24,12 @@ namespace TestLUISDeserialization
         public bool retrievable { get; set; }
         public bool facetable { get; set; }
         public bool filterable { get; set; }
+        public List<Field> fields { get; set; }
+
+        public Field()
+        {
+            fields = new List<Field>();
+        }
     }
 
 }
